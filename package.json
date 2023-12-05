@@ -4,6 +4,10 @@
   "main": "index.js",
   "repository": "https://github.com/hoainam201/FoodRecipeServer.git",
   "author": "hoainam201",
+  "scripts": {
+    "start": "nodemon src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "license": "MIT",
   "dependencies": {
     "cookie-parser": "^1.4.6",
