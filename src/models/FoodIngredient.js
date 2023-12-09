@@ -23,7 +23,7 @@ const FoodIngredient = sequelize.define("food_ingredient", {
             }
         },
         value: {
-            type: DataTypes.CHAR,
+            type: DataTypes.STRING,
             allowNull: false
         },
     },

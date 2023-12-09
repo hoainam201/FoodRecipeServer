@@ -1,9 +1,12 @@
 const Food = require("../models/Food");
 const Image = require("../models/Image");
 const Review = require("../models/Review")
-const User = require("../models/User");
+const User = require("../models/User")
+const Ingredient = require("../models/Ingredient");
+const FoodIngredient = require("../models/FoodIngredient");
 
 Review.belongsTo(User, {foreignKey: "user_id"});
+FoodIngredient.belongsTo(Food, {foreignKey: "food_id"});
 
 const getFoodById = async (req, res) => {
     try {
@@ -12,7 +15,23 @@ const getFoodById = async (req, res) => {
             where: {
                 id
             }
+        })
+        if (!food) {
+            return res.status(404).json({
+                message: "Food not found"
+            });
+        }
+        const ingredients = await FoodIngredient.findAll({
+            attributes: ["value"],
+            include: [{
+                model: Ingredient,
+                attributes: ["name"]
+            }],
+            where: {
+                food_id: food.id
+            }
         });
+        food.dataValues.ingredients = ingredients;
         const images = await Image.findAll({
             attributes: ["id", "url"],
             where: {
