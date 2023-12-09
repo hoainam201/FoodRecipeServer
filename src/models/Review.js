@@ -35,7 +35,6 @@ const Review = sequelize.define("reviews", {
         },
         review: {
             type: DataTypes.TEXT,
-            allowNull: false
         },
         created_at: {
             type: DataTypes.DATE,
