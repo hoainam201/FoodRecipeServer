@@ -45,10 +45,10 @@ async function getReqCookingTime(req) {
 }
 
 async function getReqMaxRating(req) {
-    const maxRating = req.body.maxRating || null;
-    if (maxRating) {
+    const max_rating = req.body.max_rating || null;
+    if (max_rating) {
         return {
-            [Op.between]: [maxRating - 1, maxRating]
+            [Op.between]: [max_rating - 1, max_rating]
         }
     }
     return null;
@@ -81,25 +81,34 @@ async function getFoodIdListReqByIngredients(req) {
 
 async function getFoodListByReq(req) {
     const page = parseInt((req.body.page)) || 1;
-    const pageSize = parseInt(req.body.pageSize) || 8;
+    const page_size = parseInt(req.body.page_size) || 8;
     const sort = req.body.sort || null;
     const by = req.body.by || null;
+
+    const search = req.body.search || null;
 
     const query = {}
     if (req.body.cooking_time) {
         query.cooking_time = await getReqCookingTime(req)
     }
-    if (req.body.maxRating) {
+    if (req.body.max_rating) {
         query.rating = await getReqMaxRating(req)
     }
     if (req.body.ingredients && req.body.ingredients.length > 0) {
         query.id = await getFoodIdListReqByIngredients(req);
     }
 
+    if (search) {
+        query.name = {
+            [Op.like]: `%${search.toLowerCase()}%`
+        }
+    }
+
     const foods = await Food.findAll({
+        attributes: ["id", "name", "rating", "cooking_time"],
         where: query,
-        offset: (page - 1) * pageSize,
-        limit: pageSize,
+        offset: (page - 1) * page_size,
+        limit: page_size,
         order: [[by || "updated_at", sort || "desc"]]
     })
     for (let i = 0; i < foods.length; i++) {
@@ -126,9 +135,17 @@ const home = async (req, res) => {
 }
 
 const search = async (req, res) => {
-
+    try {
+        const foods = await getFoodListByReq(req);
+        res.json(foods);
+    }
+    catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
 }
 
 module.exports = {
-    home
+    home,
+    search
 }
