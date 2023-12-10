@@ -1,4 +1,4 @@
-const {Op} = require("sequelize");
+const {Op, Sequelize} = require("sequelize");
 
 const Food = require("../models/Food");
 const Ingredient = require("../models/Ingredient");
@@ -145,7 +145,33 @@ const search = async (req, res) => {
     }
 }
 
+const getRandomFoods = async (req, res) => {
+    try {
+        const foods = await Food.findAll({
+            attributes: ["id", "name", "rating", "cooking_time"],
+            order: Sequelize.literal('random()'),
+            limit: 8
+        });
+        for (let i = 0; i < foods.length; i++) {
+            const food = foods[i];
+            const images = await Image.findAll({
+                where: {
+                    food_id: food.id
+                },
+                limit: 1
+            });
+            foods[i].dataValues.image = images[0].url;
+        }
+        res.json(foods);
+    }
+    catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+}
+
 module.exports = {
     home,
-    search
+    search,
+    getRandomFoods
 }
