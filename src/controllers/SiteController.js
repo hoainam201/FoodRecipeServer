@@ -107,8 +107,8 @@ async function getFoodListByReq(req) {
     const foods = await Food.findAll({
         attributes: ["id", "name", "rating", "cooking_time"],
         where: query,
-        offset: (page - 1) * page_size,
-        limit: page_size,
+        // offset: (page - 1) * page_size,
+        // limit: page_size,
         order: [[by || "updated_at", sort || "desc"]]
     })
     for (let i = 0; i < foods.length; i++) {
