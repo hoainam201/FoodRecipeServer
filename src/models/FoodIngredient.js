@@ -8,6 +8,7 @@ const FoodIngredient = sequelize.define("food_ingredient", {
             type: DataTypes.INTEGER,
             allowNull: false,
             primaryKey: true,
+            onDelete: "CASCADE",
             references: {
                 model: Food,
                 key: "id"
@@ -17,6 +18,7 @@ const FoodIngredient = sequelize.define("food_ingredient", {
             type: DataTypes.INTEGER,
             allowNull: false,
             primaryKey: true,
+            onDelete: "CASCADE",
             references: {
                 model: Ingredient,
                 key: "id"

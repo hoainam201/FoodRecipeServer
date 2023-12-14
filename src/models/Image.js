@@ -11,6 +11,7 @@ const Image = sequelize.define("images", {
         food_id: {
             type: DataTypes.INTEGER,
             allowNull: false,
+            onDelete: "CASCADE",
             references: {
                 model: Food,
                 key: "id"

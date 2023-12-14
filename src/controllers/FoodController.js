@@ -65,7 +65,8 @@ const getFoodById = async (req, res) => {
                 },
                 limit: 1
             });
-            food.dataValues.image = images[0].url;
+            if (images.length > 0)
+                food.dataValues.image = images[0].url;
         }
         food.dataValues.recommendedFoods = recommendedFoods
         res.send(food);
@@ -76,6 +77,64 @@ const getFoodById = async (req, res) => {
     }
 }
 
+const createFood = async (req, res) => {
+    try {
+        // req.body.owner = 1;
+        // console.log(req.body);
+        const food = await Food.create(req.body);
+        const ingredients = req.body.ingredients;
+        console.log(ingredients);
+        if (ingredients) {
+            for (let i = 0; i < ingredients.length; i++) {
+                const isHave = await Ingredient.findOne(
+                    {
+                        where: {
+                            name: ingredients[i].name
+                        }
+                    }
+                )
+                if (!isHave) {
+                    const newIngredient = await Ingredient.create({
+                        name: ingredients[i].name
+                    });
+                    await FoodIngredient.create({
+                        food_id: food.id,
+                        ingredient_id: newIngredient.id,
+                        value: ingredients[i].value
+                    })
+                } else {
+                    await FoodIngredient.create({
+                        food_id: food.id,
+                        ingredient_id: isHave.id,
+                        value: ingredients[i].value
+                    })
+                }
+            }
+        }
+        const url = []
+        if (req.files) {
+            const imageUrl = req.files.map(file => {
+                file.filename;
+                url.push("http://localhost:5000/image/" + file.filename)
+            });
+            if (url)
+                for (let i = 0; i < url.length; i++) {
+                    await Image.create({
+                        food_id: food.id,
+                        url: url[i]
+                    })
+                }
+            ;
+        }
+        food.url = url;
+        res.send(food);
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+}
+
 module.exports = {
-    getFoodById
+    getFoodById,
+    createFood
 }
