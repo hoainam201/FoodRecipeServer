@@ -119,7 +119,8 @@ async function getFoodListByReq(req) {
             },
             limit: 1
         });
-        foods[i].dataValues.image = images[0].url;
+        if (images.length > 0)
+            foods[i].dataValues.image = images[0].url;
     }
     return foods;
 }
@@ -138,8 +139,7 @@ const search = async (req, res) => {
     try {
         const foods = await getFoodListByReq(req);
         res.json(foods);
-    }
-    catch (error) {
+    } catch (error) {
         console.log(error);
         res.sendStatus(500);
     }
@@ -160,11 +160,11 @@ const getRandomFoods = async (req, res) => {
                 },
                 limit: 1
             });
-            foods[i].dataValues.image = images[0].url;
+            if (images.length > 0)
+                foods[i].dataValues.image = images[0].url;
         }
         res.json(foods);
-    }
-    catch (error) {
+    } catch (error) {
         console.log(error);
         res.sendStatus(500);
     }

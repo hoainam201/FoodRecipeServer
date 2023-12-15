@@ -53,7 +53,9 @@ const getFoodById = async (req, res) => {
         const recommendedFoods = await Food.findAll({
             attributes: ["id", "name", "rating", "cooking_time"],
             where: {
-                method: food.method
+                id: {
+                    [Op.ne]: food.id
+                }
             },
             limit: 4
         })
@@ -80,7 +82,7 @@ const getFoodById = async (req, res) => {
 const createFood = async (req, res) => {
     try {
         // req.body.owner = 1;
-        // console.log(req.body);
+        console.log(req.body);
         const food = await Food.create(req.body);
         const ingredients = req.body.ingredients;
         console.log(ingredients);
