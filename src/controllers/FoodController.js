@@ -4,6 +4,7 @@ const Review = require("../models/Review")
 const User = require("../models/User")
 const Ingredient = require("../models/Ingredient");
 const FoodIngredient = require("../models/FoodIngredient");
+const {Op} = require("sequelize");
 
 Review.belongsTo(User, {foreignKey: "user_id"});
 FoodIngredient.belongsTo(Food, {foreignKey: "food_id"});
