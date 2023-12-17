@@ -86,7 +86,7 @@ const createFood = async (req, res) => {
         console.log(req.body);
         const food = await Food.create(req.body);
         const ingredients = req.body.ingredients;
-        console.log(ingredients);
+        // console.log(ingredients);
         if (ingredients) {
             for (let i = 0; i < ingredients.length; i++) {
                 const isHave = await Ingredient.findOne(
@@ -96,6 +96,7 @@ const createFood = async (req, res) => {
                         }
                     }
                 )
+                console.log('isHave', isHave, ingredients[i].name);
                 if (!isHave) {
                     const newIngredient = await Ingredient.create({
                         name: ingredients[i].name
@@ -106,11 +107,18 @@ const createFood = async (req, res) => {
                         value: ingredients[i].value
                     })
                 } else {
-                    await FoodIngredient.create({
-                        food_id: food.id,
-                        ingredient_id: isHave.id,
-                        value: ingredients[i].value
-                    })
+                    const isHaveConstant = await FoodIngredient.findOne({
+                        where: {
+                            food_id: food.id,
+                            ingredient_id: isHave.id
+                        }
+                    });
+                    if (!isHaveConstant)
+                        await FoodIngredient.create({
+                            food_id: food.id,
+                            ingredient_id: isHave.id,
+                            value: ingredients[i].value
+                        })
                 }
             }
         }
