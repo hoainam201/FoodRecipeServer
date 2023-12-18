@@ -84,7 +84,17 @@ const createFood = async (req, res) => {
     try {
         // req.body.owner = 1;
         console.log(req.body);
-        const food = await Food.create(req.body);
+        const food = await Food.create(
+            {
+                name: req.body.name,
+                description: req.body.description,
+                cooking_time: req.body.cooking_time,
+                method: req.body.method,
+                owner: req.userData.id,
+                steps: req.body.steps,
+                video: req.body.video
+            }
+        );
         const ingredients = req.body.ingredients;
         // console.log(ingredients);
         if (ingredients) {
