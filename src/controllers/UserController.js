@@ -48,7 +48,7 @@ const login = async (req, res) => {
 }
 
 const register = async (req, res) => {
-    try{
+    try {
         const {username, password} = req.body;
         if (username && password) {
             const user = await User.findOne({
@@ -66,20 +66,16 @@ const register = async (req, res) => {
             const newUser = await User.create({
                 username: username,
                 password: password
-            })
-            const token = jwt.sign(
-                {
-                    username: newUser.username,
-                    id: newUser.id
-                },
-                process.env.SECRET_KEY
-            );
+            });
             res
                 .status(200)
                 .json({
-                    token
+                    message: "User created",
                 });
-        }
+        } else
+            res.status(400).json({
+                message: "Bad request"
+            })
     } catch (error) {
         console.log(error);
         res.sendStatus(500);
