@@ -4,18 +4,18 @@ require("dotenv").config();
 
 const login = async (req, res) => {
     try {
-        const {user_name, password} = req.body;
-        if (user_name && password) {
+        const {username, password} = req.body;
+        if (username && password) {
             const user = await User.scope("withPassword").findOne({
                 where: {
-                    user_name: user_name
+                    username: username
                 }
             });
             if (user) {
                 if (password === user.password) {
                     const token = jwt.sign(
                         {
-                            user_name: user.user_name,
+                            username: user.username,
                             id: user.id
                         },
                         process.env.SECRET_KEY
@@ -24,7 +24,7 @@ const login = async (req, res) => {
                         .status(200)
                         .json({
                             token,
-                            user_name: user.user_name
+                            // username: user.username
                         });
 
                 } else {
@@ -47,7 +47,47 @@ const login = async (req, res) => {
     }
 }
 
+const register = async (req, res) => {
+    try{
+        const {username, password} = req.body;
+        if (username && password) {
+            const user = await User.findOne({
+                where: {
+                    username: username
+                }
+            });
+            if (user) {
+                res
+                    .status(409)
+                    .json({
+                        message: "User already exists"
+                    });
+            }
+            const newUser = await User.create({
+                username: username,
+                password: password
+            })
+            const token = jwt.sign(
+                {
+                    username: newUser.username,
+                    id: newUser.id
+                },
+                process.env.SECRET_KEY
+            );
+            res
+                .status(200)
+                .json({
+                    token
+                });
+        }
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+}
+
 
 module.exports = {
-    login
+    login,
+    register
 }

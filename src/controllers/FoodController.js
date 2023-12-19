@@ -44,7 +44,7 @@ const getFoodById = async (req, res) => {
             attributes: ["id", "rating", "review", "created_at"],
             include: [{
                 model: User,
-                attributes: ["user_name"]
+                attributes: ["username"]
             }],
             where: {
                 food_id: food.id
@@ -107,6 +107,7 @@ const createFood = async (req, res) => {
                     }
                 )
                 console.log('isHave', isHave, ingredients[i].name);
+                const a = IN
                 if (!isHave) {
                     const newIngredient = await Ingredient.create({
                         name: ingredients[i].name
