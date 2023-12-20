@@ -19,7 +19,7 @@ const getFoodById = async (req, res) => {
         })
         if (!food) {
             return res.status(404).json({
-                message: "Food not found"
+                message: "Không tìm thấy món ăn!!!"
             });
         }
         const ingredients = await FoodIngredient.findAll({
