@@ -136,7 +136,7 @@ const createFood = async (req, res) => {
         if (req.files) {
             const imageUrl = req.files.map(file => {
                 file.filename;
-                url.push("https://foodrecipeserver-8r79.onrender.com" + file.filename)
+                url.push("https://foodrecipeserver-8r79.onrender.com/image/" + file.filename)
             });
             if (url)
                 for (let i = 0; i < url.length; i++) {
