@@ -107,7 +107,6 @@ const createFood = async (req, res) => {
                     }
                 )
                 console.log('isHave', isHave, ingredients[i].name);
-                const a = IN
                 if (!isHave) {
                     const newIngredient = await Ingredient.create({
                         name: ingredients[i].name
