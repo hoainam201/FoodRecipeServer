@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const siteController = require("../controllers/siteController");
+const siteController = require("../controllers/SiteController");
 
 router.post('/search', siteController.search);
 router.get('/get-ramdom-food', siteController.getRandomFoods);
